@@ -49,21 +49,21 @@ class Pet {
     }
     public void eat()
     {
-        System.out.println("Я їм");
+        System.out.println("Я їм.");
     }
     public void respond()
     {
-        System.out.println("Привіт хазяїне.Мене звати  "+this.nickname+".Я скучив!");
+        System.out.println("Привіт хазяїне.Мене звати  "+this.nickname+"Мені "+this.age+".Я скучив!");
     }
     public void foul()
     {
-        System.out.println("Потрібно добре замести сліди...");
+        System.out.println("Потрібно добре замести сліди,бо буде халепа");
     }
     @Override
     public String toString()
     {
         return this.species+"{ nickname= "+this.nickname+",age= "+this.age+",tricklevel= "
-                +this.trickLevel +String.join(",", this.getHabits())+" }";
+                +this.trickLevel +",habits= "+String.join(",", this.getHabits())+" }";
     }
     public Pet(String species, String nickname){
         setSpecies(species);
