@@ -2,19 +2,14 @@ import java.util.Arrays;
 import java.util.Objects;
 
 class Pet {
-    private String species;
+    private Species species;
     private String nickname;
     private int age;
     private int trickLevel;
     private String[] habits;
-    public String getSpecies()
-    {
-        return species;
-    }
-    public void setSpecies(String newSpecies)
-    {
-        species=newSpecies;
-    }
+    public String getSpecies() {return  species.getTitle();}
+    public void setSpecies(Species newSpecies) {
+        this.species=newSpecies;}
     public int getAge()
     {
         return age;
@@ -62,14 +57,21 @@ class Pet {
     @Override
     public String toString()
     {
-        return this.species+"{ nickname= "+this.nickname+",age= "+this.age+",tricklevel= "
-                +this.trickLevel +",habits= "+String.join(",", this.getHabits())+" }";
+        return this.species + "{ nickname= " + this.nickname +
+                ", age= " + this.age +
+                ", tricklevel= " + this.trickLevel +
+                ", habits= " + (this.getHabits() != null && this.getHabits().length > 0
+                ? String.join(", ", this.getHabits())
+                : "none") +
+                ", canFly= " + this.species.canFly() +
+                ", numberOfLegs= " + this.species.getNumberOfLegs() +
+                ", hasFur= " + this.species.hasFur() + " }";
     }
-    public Pet(String species, String nickname){
+    public Pet(Species species, String nickname){
         setSpecies(species);
         setNickname(nickname);
     }
-    public Pet(String species, String nickname, int age, int trickLevel, String[] habits){
+    public Pet(Species species, String nickname, int age, int trickLevel, String[] habits){
         setSpecies(species);
         setNickname(nickname);
         setAge(age);
@@ -94,5 +96,14 @@ class Pet {
          result = 31 * result + Arrays.hashCode(habits);
          return result;
      }
+    @Override
+    @SuppressWarnings("deprecation")
+    protected void finalize() throws Throwable {
+        try {
+            System.out.printf("\nВидаляємо тварину %s", this.getNickname());
+        } finally {
+            super.finalize();
+        }
+    }
 
 }

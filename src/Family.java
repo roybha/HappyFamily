@@ -43,12 +43,23 @@ public Family(Human mother, Human father) {
     return "Family{ mother="+this.mother.toString()+",father="+this.father.toString()+", children="+InfoAboutChildren()+", pet="+this.pet.toString()+"}";
 }
 public  String InfoAboutChildren(){
-    for(Human human : this.children){
-        if(human != null){
-            System.out.print(human.toString()+", ");
+    if (this.children == null || this.children.length == 0) {
+        return "none";
+    }
+
+    String result = "";
+    for (Human human : this.children) {
+        if (human != null) {
+            result += human.toString() + ", ";
         }
     }
-    return "";
+
+    // Видаляємо останню кому і пробіл, якщо додано дітей
+    if (!result.isEmpty()) {
+        result = result.substring(0, result.length() - 2); // Вилучаємо ", "
+    }
+
+    return result;
 }
 public void AddChild(Human child) {
     if (this.getChildren() == null) {
@@ -74,6 +85,18 @@ public void AddChild(Human child) {
         else
             return false;
 
+    }
+    public  boolean DeleteChild(Human child){
+    for(int i=0;i<this.children.length;i++){
+        if(children[i].equals(child)){
+            Human[] newChildren = new Human[this.children.length-1];
+            System.arraycopy(this.children, 0, newChildren, 0, i);
+            System.arraycopy(this.children, i + 1, newChildren, i, (this.children.length - i) - 1);
+            setChildren(newChildren);
+            return true;
+        }
+      }
+        return false;
     }
     public  int CountFamily(){
     int fatherCount = 1;
@@ -103,5 +126,14 @@ public void AddChild(Human child) {
     @Override
     public int hashCode() {
         return Objects.hash(mother, father, pet) + Arrays.hashCode(children);
+    }
+    @Override
+    @SuppressWarnings("deprecation")
+    protected void finalize() throws Throwable {
+        try {
+            System.out.printf("\nВидаляємо сім'ю кількістю %d",this.CountFamily() );
+        } finally {
+            super.finalize();
+        }
     }
 }
