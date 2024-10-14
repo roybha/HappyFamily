@@ -40,7 +40,8 @@ public Family(Human mother, Human father) {
 @Override
     public String toString() {
 
-    return "Family{ mother="+this.mother.toString()+",father="+this.father.toString()+", children="+InfoAboutChildren()+", pet="+this.pet.toString()+"}";
+    return this.getClass()+"{ mother="+((this.getMother()!=null)?this.mother.toString():" null")+",father="+((this.getFather()!=null)?this.father.toString():"null")+", children="+InfoAboutChildren()+
+            ", pet="+((this.getPet()!=null) ? this.pet.toString()+"}":" null");
 }
 public  String InfoAboutChildren(){
     if (this.children == null || this.children.length == 0) {

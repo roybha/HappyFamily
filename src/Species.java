@@ -1,14 +1,17 @@
 public enum Species {
     DOG("Dog", false, 4, true),
-    CAT("Cat", false, 4, true),
-    BIRD("Bird", true, 2, false),
+    FISH("Fish", false, 0, false),
+    DOMESTIC_CAT("Domestic Cat", false, 4, true),
+    ROBO_CAT("Robot Cat", true, 4, false),
     SNAKE("Snake", false, 0, false),
-    TURTLE("Turtle", false, 4, false);
+    TURTLE("Turtle", false, 4, false),
+    BIRD("Bird", true, 2, false),
+    UNKNOWN("Unknown", false, 0, false);
 
-    private String title;
-    private boolean canFly;
-    private int numberOfLegs;
-    private boolean hasFur;
+    private final String title;
+    private final boolean canFly;
+    private  final int numberOfLegs;
+    private final boolean hasFur;
 
     // Оновлений конструктор
     Species(String title, boolean canFly, int numberOfLegs, boolean hasFur) {
@@ -21,10 +24,6 @@ public enum Species {
     // Геттери та сеттери для нових полів
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public boolean canFly() {

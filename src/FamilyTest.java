@@ -8,14 +8,14 @@ class FamilyTest {
         Human father = new Human("Ivan", "Ivanov",36);
         Family family = new Family(mother, father);
         family.AddChild(new Human("Alex","Ivanov",10));
-        family.setPet(new Pet(Species.DOG, "Rex"));
+        family.setPet(new Dog( true,"Rex"));
         return family;
     }
     @Test
     void testToString() {
 
         Family family = CreateFamily();
-        String expected = "Family{ mother=Human{name= Anna,surname= Ivanova,year= 33,iq= 0,schedule =[[Monday, null], [Tuesday, null], [Wednesday, null], [Thursday, null], [Friday, null], [Saturday, null], [Sunday, null]]},father=Human{name= Ivan,surname= Ivanov,year= 36,iq= 0,schedule =[[Monday, null], [Tuesday, null], [Wednesday, null], [Thursday, null], [Friday, null], [Saturday, null], [Sunday, null]]}, children=Human{name= Alex,surname= Ivanov,year= 10,iq= 0,schedule =[[Monday, null], [Tuesday, null], [Wednesday, null], [Thursday, null], [Friday, null], [Saturday, null], [Sunday, null]]}, pet=DOG{ nickname= Rex, age= 0, tricklevel= 0, habits= none, canFly= false, numberOfLegs= 4, hasFur= true }}";
+        String expected = "class Family{ mother=class Human{name= Anna,surname= Ivanova,year= 33,iq= 0,schedule =[[Monday, null], [Tuesday, null], [Wednesday, null], [Thursday, null], [Friday, null], [Saturday, null], [Sunday, null]]},father=class Human{name= Ivan,surname= Ivanov,year= 36,iq= 0,schedule =[[Monday, null], [Tuesday, null], [Wednesday, null], [Thursday, null], [Friday, null], [Saturday, null], [Sunday, null]]}, children=class Human{name= Alex,surname= Ivanov,year= 10,iq= 0,schedule =[[Monday, null], [Tuesday, null], [Wednesday, null], [Thursday, null], [Friday, null], [Saturday, null], [Sunday, null]]}, pet=DOG{ nickname= Rex, age= 0, tricklevel= 0, habits= none, canFly= false, numberOfLegs= 4, hasFur= true }}";
         assertEquals(expected, family.toString());
         Human anotherHuman = new Human("Jane", "Smith", 1990);
         family.setFather(anotherHuman);
@@ -122,7 +122,7 @@ class FamilyTest {
     @Test
     public void testEqualsDifferentClass() {
         Family family1 = CreateFamily();
-        Pet testPet = new Pet(Species.SNAKE,"Nicky");
+        Pet testPet = new DomesticCat(false,"Nicky");
         assertFalse(family1.equals(testPet), "Об'єкт не має дорівнювати об'єкту іншого класу");
     }
     @Test

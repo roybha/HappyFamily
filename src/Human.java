@@ -93,7 +93,7 @@ public class Human {
 
   @Override
   public String toString() {
-    return "Human{name= " + this.getName() + ",surname= " + this.getSurname() + ",year= " + this.getYear() + ",iq= " + this.getIq() + ",schedule =" + Arrays.deepToString(getSchedule()) + "}";
+    return this.getClass()+"{name= " + this.getName() + ",surname= " + this.getSurname() + ",year= " + this.getYear() + ",iq= " + this.getIq() + ",schedule =" + Arrays.deepToString(getSchedule()) + "}";
   }
 
   public Human(String name, String surname, int year) {
@@ -106,11 +106,13 @@ public class Human {
     setName(name);
     setSurname(surname);
     setYear(year);
-    mother.getFamily().AddChild(this);
-    this.family = mother.family;
-    family.setFather(father);
-    family.setMother(mother);
-    family.AddChild(this);
+    if(mother!=null&& mother.family!=null)
+    {
+      mother.getFamily().AddChild(this);
+      this.family = mother.family;
+      family.setFather(father);
+      family.setMother(mother);
+    }
   }
 
   public Human(String name, String surname, int year, int iq, Pet pet, Human mother, Human father, String[][] schedule) {
@@ -118,12 +120,15 @@ public class Human {
     setSurname(surname);
     setYear(year);
     setIq(iq);
-    father.getFamily().AddChild(this);
-    this.family = mother.family;
-    this.family.setPet(pet);
-    this.family.setMother(mother);
-    this.family.setFather(father);
-    this.schedule = schedule;
+    setSchedule(schedule);
+    if(father!=null&& father.family!=null) {
+      father.getFamily().AddChild(this);
+      this.family = mother.family;
+      this.family.setMother(mother);
+      this.family.setFather(father);
+      this.family.setPet(pet);
+    }
+
   }
 
   public Human() {

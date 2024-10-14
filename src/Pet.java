@@ -1,15 +1,14 @@
 import java.util.Arrays;
 import java.util.Objects;
 
-class Pet {
+abstract class Pet {
     private Species species;
     private String nickname;
     private int age;
     private int trickLevel;
     private String[] habits;
     public String getSpecies() {return  species.getTitle();}
-    public void setSpecies(Species newSpecies) {
-        this.species=newSpecies;}
+    public void setSpecies(Species newSpecies) {this.species=newSpecies;}
     public int getAge()
     {
         return age;
@@ -22,10 +21,7 @@ class Pet {
     {
         return trickLevel;
     }
-    public void setTrickLevel(int newHickLevel)
-    {
-        trickLevel =newHickLevel;
-    }
+    public void setTrickLevel(int newHickLevel) {trickLevel =newHickLevel;}
     public String[] getHabits()
     {
         return habits;
@@ -46,14 +42,7 @@ class Pet {
     {
         System.out.println("Я їм.");
     }
-    public void respond()
-    {
-        System.out.println("Привіт хазяїне.Мене звати  "+this.nickname+"Мені "+this.age+".Я скучив!");
-    }
-    public void foul()
-    {
-        System.out.println("Потрібно добре замести сліди,бо буде халепа");
-    }
+    public  abstract void respond();
     @Override
     public String toString()
     {
@@ -67,12 +56,13 @@ class Pet {
                 ", numberOfLegs= " + this.species.getNumberOfLegs() +
                 ", hasFur= " + this.species.hasFur() + " }";
     }
-    public Pet(Species species, String nickname){
-        setSpecies(species);
+    public Pet(){
+        setSpecies(Species.UNKNOWN);
+    }
+    public Pet(String nickname){
         setNickname(nickname);
     }
-    public Pet(Species species, String nickname, int age, int trickLevel, String[] habits){
-        setSpecies(species);
+    public Pet(String nickname, int age, int trickLevel, String[] habits){
         setNickname(nickname);
         setAge(age);
         setTrickLevel(trickLevel);
