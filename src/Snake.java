@@ -1,3 +1,6 @@
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+
 public class Snake extends Pet implements Foulable {
     public Snake() {
         super();
@@ -8,7 +11,7 @@ public class Snake extends Pet implements Foulable {
         setSpecies(isSpeciesKnown?Species.SNAKE:Species.UNKNOWN);
     }
 
-    public Snake(boolean isSpeciesKnown,String nickname, int age, int trickLevel, String[] habits) {
+    public Snake(boolean isSpeciesKnown,String nickname, int age, int trickLevel, LinkedHashSet<String> habits) {
         super(nickname, age, trickLevel, habits);
         setSpecies(isSpeciesKnown?Species.SNAKE:Species.UNKNOWN);
     }

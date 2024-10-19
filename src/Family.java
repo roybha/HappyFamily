@@ -1,11 +1,12 @@
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 
 public class Family {
 private Human mother;
 private Human father;
-private Human[] children;
-private Pet pet;
+private ArrayList<Human> children;
+private LinkedHashSet<Pet> pets;
 public Human getMother() {
     return mother;
 }
@@ -18,17 +19,23 @@ public Human getFather() {
 public void setFather(Human father) {
     this.father = father;
 }
-public Human[] getChildren() {
+public ArrayList<Human> getChildren() {
     return children;
 }
-public void setChildren(Human[] children) {
+public void setChildren(ArrayList<Human> children) {
     this.children = children;
 }
-public Pet getPet() {
-    return pet;
+public LinkedHashSet<Pet> getPets() {
+    return pets;
 }
-public void setPet(Pet pet) {
-    this.pet = pet;
+public Pet getPet(Pet pet) {
+    if (pets.contains(pet)) {
+        return pet;
+    }
+    return null;
+}
+public void setPets(LinkedHashSet<Pet> pets) {
+    this.pets = pets;
 }
 public Family(Human mother, Human father) {
     this.mother = mother;
@@ -41,10 +48,10 @@ public Family(Human mother, Human father) {
     public String toString() {
 
     return this.getClass()+"{ mother="+((this.getMother()!=null)?this.mother.toString():" null")+",father="+((this.getFather()!=null)?this.father.toString():"null")+", children="+InfoAboutChildren()+
-            ", pet="+((this.getPet()!=null) ? this.pet.toString()+"}":" null");
+            ", pets="+((this.getPets()!=null) ? this.pets.toString()+"}":" null");
 }
 public  String InfoAboutChildren(){
-    if (this.children == null || this.children.length == 0) {
+    if (this.children == null || this.children.isEmpty()) {
         return "none";
     }
 
@@ -64,22 +71,18 @@ public  String InfoAboutChildren(){
 }
 public void AddChild(Human child) {
     if (this.getChildren() == null) {
-        this.children = new Human[1];
-        this.children[0] = child;
+        this.children = new ArrayList<>();
+        this.children.add(child);
         child.setFamily(this);
     } else {
-        Human[] newChildren = new Human[this.children.length + 1];
-        System.arraycopy(this.children, 0, newChildren, 0, this.children.length);
-        newChildren[this.children.length] = child; // Додаємо нову дитину в кінець
-        this.children = newChildren;
+        this.children.add(child); // Додаємо нову дитину в кінець
         child.setFamily(this);
     }
 }
     public boolean DeleteChild(int i){
-        if(children!=null&&i<this.children.length && i>=0){
-            Human[] newChildren = new Human[this.children.length-1];
-            System.arraycopy(this.children, 0, newChildren, 0, i);
-            System.arraycopy(this.children, i + 1, newChildren, i, (this.children.length - i) - 1);
+        if(children!=null&&i<this.children.size() && i>=0){
+            ArrayList<Human> newChildren = new ArrayList<>(this.children);
+            newChildren.remove(newChildren.get(i));
             setChildren(newChildren);
             return true;
         }
@@ -88,16 +91,11 @@ public void AddChild(Human child) {
 
     }
     public  boolean DeleteChild(Human child){
-    for(int i=0;i<this.children.length;i++){
-        if(children[i].equals(child)){
-            Human[] newChildren = new Human[this.children.length-1];
-            System.arraycopy(this.children, 0, newChildren, 0, i);
-            System.arraycopy(this.children, i + 1, newChildren, i, (this.children.length - i) - 1);
-            setChildren(newChildren);
+         if(this.children.contains(child)){
+            this.children.remove(child);
             return true;
-        }
-      }
-        return false;
+         }
+         return false;
     }
     public  int CountFamily(){
     int fatherCount = 1;
@@ -121,12 +119,12 @@ public void AddChild(Human child) {
         Family family = (Family) obj;
         return Objects.equals(mother, family.mother) &&
                 Objects.equals(father, family.father) &&
-                Arrays.equals(children, family.children) &&
-                Objects.equals(pet, family.pet);
+                Objects.equals(children, family.children) &&
+                Objects.equals(pets, family.pets);
     }
     @Override
     public int hashCode() {
-        return Objects.hash(mother, father, pet) + Arrays.hashCode(children);
+        return Objects.hash(mother, father, pets) + Objects.hashCode(children);
     }
     @Override
     @SuppressWarnings("deprecation")

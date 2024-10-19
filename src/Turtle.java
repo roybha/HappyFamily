@@ -1,3 +1,5 @@
+import java.util.LinkedHashSet;
+
 public class Turtle extends Pet implements Foulable {
     public Turtle() {
         super();
@@ -8,7 +10,7 @@ public class Turtle extends Pet implements Foulable {
         setSpecies(isSpeciesKnown?Species.TURTLE:Species.UNKNOWN);
     }
 
-    public Turtle(boolean isSpeciesKnown,String nickname, int age, int trickLevel, String[] habits) {
+    public Turtle(boolean isSpeciesKnown,String nickname, int age, int trickLevel, LinkedHashSet<String> habits) {
         super(nickname, age, trickLevel, habits);
         setSpecies(isSpeciesKnown?Species.TURTLE:Species.UNKNOWN);
     }

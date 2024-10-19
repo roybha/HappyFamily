@@ -1,4 +1,5 @@
-import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 
 abstract class Pet {
@@ -6,7 +7,7 @@ abstract class Pet {
     private String nickname;
     private int age;
     private int trickLevel;
-    private String[] habits;
+    private LinkedHashSet<String> habits;
     public String getSpecies() {return  species.getTitle();}
     public void setSpecies(Species newSpecies) {this.species=newSpecies;}
     public int getAge()
@@ -22,11 +23,11 @@ abstract class Pet {
         return trickLevel;
     }
     public void setTrickLevel(int newHickLevel) {trickLevel =newHickLevel;}
-    public String[] getHabits()
+    public LinkedHashSet<String> getHabits()
     {
         return habits;
     }
-    public void setHabits(String[] newHabits)
+    public void setHabits(LinkedHashSet<String> newHabits)
     {
       habits = newHabits;
     }
@@ -49,7 +50,7 @@ abstract class Pet {
         return this.species + "{ nickname= " + this.nickname +
                 ", age= " + this.age +
                 ", tricklevel= " + this.trickLevel +
-                ", habits= " + (this.getHabits() != null && this.getHabits().length > 0
+                ", habits= " + (this.getHabits() != null && this.getHabits().size() > 0
                 ? String.join(", ", this.getHabits())
                 : "none") +
                 ", canFly= " + this.species.canFly() +
@@ -62,7 +63,7 @@ abstract class Pet {
     public Pet(String nickname){
         setNickname(nickname);
     }
-    public Pet(String nickname, int age, int trickLevel, String[] habits){
+    public Pet(String nickname, int age, int trickLevel, LinkedHashSet<String> habits){
         setNickname(nickname);
         setAge(age);
         setTrickLevel(trickLevel);
@@ -77,13 +78,13 @@ abstract class Pet {
                  trickLevel == pet.trickLevel &&
                  Objects.equals(species, pet.species) &&
                  Objects.equals(nickname, pet.nickname) &&
-                 Arrays.equals(habits, pet.habits);
+                 Objects.equals(habits, pet.habits);
      }
 
      @Override
      public int hashCode() {
          int result = Objects.hash(species, nickname, age, trickLevel);
-         result = 31 * result + Arrays.hashCode(habits);
+         result = 31 * result + Objects.hashCode(habits);
          return result;
      }
     @Override

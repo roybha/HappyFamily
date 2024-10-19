@@ -1,3 +1,6 @@
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+
 public class Fish extends Pet{
     public Fish(){
         super();
@@ -7,7 +10,7 @@ public class Fish extends Pet{
         super(name);
         setSpecies(isSpeciesKnown?Species.FISH:Species.UNKNOWN);
     }
-    public Fish( boolean isSpeciesKnown,String nickname, int age, int trickLevel, String[] habits){
+    public Fish( boolean isSpeciesKnown,String nickname, int age, int trickLevel, LinkedHashSet<String> habits){
         super(nickname,age,trickLevel,habits);
         setSpecies(isSpeciesKnown?Species.FISH:Species.UNKNOWN);
     }

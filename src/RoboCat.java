@@ -1,4 +1,7 @@
- class RoboCat extends Pet implements Foulable{
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+
+class RoboCat extends Pet implements Foulable{
     public RoboCat() {
         super();
         setSpecies(Species.UNKNOWN);
@@ -7,7 +10,7 @@
         super(name);
         setSpecies(isSpeciesKnown?Species.ROBO_CAT:Species.UNKNOWN);
     }
-    public RoboCat(boolean isSpeciesKnown,String nickname, int age, int trickLevel, String[] habits) {
+    public RoboCat(boolean isSpeciesKnown,String nickname, int age, int trickLevel, LinkedHashSet<String> habits) {
         super(nickname,age,trickLevel, habits);
         setSpecies(isSpeciesKnown?Species.ROBO_CAT:Species.UNKNOWN);
     }

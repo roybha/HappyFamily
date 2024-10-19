@@ -1,22 +1,12 @@
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.*;
 
 public class Human {
   private String name;
   private String surname;
   private int year;
   private int iq;
-  private String[][] schedule = {
-          {"Monday", null},
-          {"Tuesday", null},
-          {"Wednesday", null},
-          {"Thursday", null},
-          {"Friday", null},
-          {"Saturday", null},
-          {"Sunday", null}
-  };
+  final private LinkedHashMap<String,String> schedule =  new LinkedHashMap<>();
   private Family family;
-
   public Family getFamily() {
     return family;
   }
@@ -41,7 +31,7 @@ public class Human {
     return this.iq;
   }
 
-  public String[][] getSchedule() {
+  public LinkedHashMap<String, String> getSchedule() {
     return this.schedule;
   }
 
@@ -61,31 +51,43 @@ public class Human {
     this.iq = iq;
   }
 
-  public void setSchedule(String[][] schedule) {
+  public void setSchedule(HashMap<String, String> schedule) {
+    final int weekSize = 7;
     // Перевіряємо, чи нова таблиця має правильні розміри
-    if (schedule.length <= this.schedule.length && schedule[0].length == this.schedule[0].length) {
+    if (schedule.size() <= weekSize) {
       // Ітеруємо по рядках нової таблиці
-      for (int i = 0; i < schedule.length; i++) {
-        // Ітеруємо по стовпцях, починаючи з 1 (0 - це день тижня)
-        for (int j = 1; j < schedule[i].length; j++) {
-          // Якщо значення нової таблиці не є порожнім (null або порожній рядок), оновлюємо існуючу таблицю
-          if (schedule[i][j] != null && !schedule[i][j].isEmpty()) {
-            this.schedule[i][j] = schedule[i][j];
+      for (String i : schedule.keySet()) {
+          if (schedule.get(i) != null && !schedule.get(i).isEmpty()) {
+            this.schedule.put(i,schedule.get(i));
           }
-        }
       }
     }
   }
 
-  public void greetPet() {
-    System.out.println("Привіт " + this.family.getPet().getNickname());
+  public void greetPets() {
+    if (this.family.getPets() != null && !this.family.getPets().isEmpty()) {
+      for (Pet pet : this.family.getPets()) {
+        greetPet(pet);
+      }
+    }
+  }
+  public void greetPet(Pet pet){
+    System.out.println("Привіт " + pet.getNickname());
   }
 
-  public void describePet() {
+
+  private  void describePets(){
+    if (this.family.getPets() != null && !this.family.getPets().isEmpty()) {
+      for (Pet pet : this.family.getPets()) {
+        describePet(pet);
+      }
+    }
+  }
+  public void describePet(Pet pet) {
     final int MiddleLevelOfHick = 50;
-    System.out.print("У мене є " + this.family.getPet().getSpecies() +
-            " йому " + this.family.getPet().getAge());
-    if (this.family.getPet().getTrickLevel() > MiddleLevelOfHick)
+    System.out.print("У мене є " + pet.getSpecies() +
+            " йому " + pet.getAge());
+    if (pet.getTrickLevel() > MiddleLevelOfHick)
       System.out.println(".Він дуже хитрий");
     else
       System.out.println(".Він майже не хитрий");
@@ -93,19 +95,26 @@ public class Human {
 
   @Override
   public String toString() {
-    return this.getClass()+"{name= " + this.getName() + ",surname= " + this.getSurname() + ",year= " + this.getYear() + ",iq= " + this.getIq() + ",schedule =" + Arrays.deepToString(getSchedule()) + "}";
+
+    List<String> entries = new ArrayList<>();
+    getSchedule().forEach((k, v) -> entries.add("[" + k + ", " + (v.isEmpty() ? "null" : v) + "]"));
+    String scheduleString = "[" + String.join(", ", entries) + "]";
+
+    return this.getClass()+"{name= " + this.getName() + ",surname= " + this.getSurname() + ",year= " + this.getYear() + ",iq= " + this.getIq() + ",schedule =" + scheduleString + "}";
   }
 
   public Human(String name, String surname, int year) {
     setName(name);
     setSurname(surname);
     setYear(year);
+    InitializeSchedule();
   }
 
   public Human(String name, String surname, int year, Human mother, Human father) {
     setName(name);
     setSurname(surname);
     setYear(year);
+    InitializeSchedule();
     if(mother!=null&& mother.family!=null)
     {
       mother.getFamily().AddChild(this);
@@ -115,18 +124,19 @@ public class Human {
     }
   }
 
-  public Human(String name, String surname, int year, int iq, Pet pet, Human mother, Human father, String[][] schedule) {
+  public Human(String name, String surname, int year, int iq, LinkedHashSet<Pet> pets, Human mother, Human father, LinkedHashMap<String,String> schedule) {
     setName(name);
     setSurname(surname);
     setYear(year);
     setIq(iq);
+    InitializeSchedule();
     setSchedule(schedule);
     if(father!=null&& father.family!=null) {
       father.getFamily().AddChild(this);
       this.family = mother.family;
       this.family.setMother(mother);
       this.family.setFather(father);
-      this.family.setPet(pet);
+      this.family.setPets(pets);
     }
 
   }
@@ -148,12 +158,12 @@ public class Human {
             iq == human.iq &&
             Objects.equals(name, human.name) &&
             Objects.equals(surname, human.surname) &&
-            Arrays.deepEquals(schedule, human.schedule); // Порівняння масивів із використанням deepEquals
+            Objects.equals(schedule, human.schedule); // Порівняння масивів із використанням deepEquals
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, surname, year, iq) + Arrays.deepHashCode(schedule);
+    return Objects.hash(name, surname, year, iq) + schedule.hashCode();
   }
 
   @Override
@@ -164,5 +174,14 @@ public class Human {
     } finally {
       super.finalize(); // Завжди викликайте finalize() батьківського класу
     }
+  }
+  private  void InitializeSchedule() {
+    schedule.put("Понеділок", "");
+    schedule.put("Вівторок", "");
+    schedule.put("Середа", "");
+    schedule.put("Четвер", "");
+    schedule.put("П'ятниця", "");
+    schedule.put("Субота", "");
+    schedule.put("Неділя", "");
   }
 }

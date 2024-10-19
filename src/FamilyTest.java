@@ -1,5 +1,7 @@
 import org.junit.jupiter.api.Test;
 
+import java.util.*;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class FamilyTest {
@@ -8,14 +10,15 @@ class FamilyTest {
         Human father = new Human("Ivan", "Ivanov",36);
         Family family = new Family(mother, father);
         family.AddChild(new Human("Alex","Ivanov",10));
-        family.setPet(new Dog( true,"Rex"));
+        LinkedHashSet<Pet> pets = new LinkedHashSet<>(List.of(new Dog( true,"Rex"),new Dog( false,"Luna"),new Dog( true,"T-Rex")));
+        family.setPets(pets);
         return family;
     }
     @Test
     void testToString() {
 
         Family family = CreateFamily();
-        String expected = "class Family{ mother=class Human{name= Anna,surname= Ivanova,year= 33,iq= 0,schedule =[[Monday, null], [Tuesday, null], [Wednesday, null], [Thursday, null], [Friday, null], [Saturday, null], [Sunday, null]]},father=class Human{name= Ivan,surname= Ivanov,year= 36,iq= 0,schedule =[[Monday, null], [Tuesday, null], [Wednesday, null], [Thursday, null], [Friday, null], [Saturday, null], [Sunday, null]]}, children=class Human{name= Alex,surname= Ivanov,year= 10,iq= 0,schedule =[[Monday, null], [Tuesday, null], [Wednesday, null], [Thursday, null], [Friday, null], [Saturday, null], [Sunday, null]]}, pet=DOG{ nickname= Rex, age= 0, tricklevel= 0, habits= none, canFly= false, numberOfLegs= 4, hasFur= true }}";
+        String expected = "class Family{ mother=class Human{name= Anna,surname= Ivanova,year= 33,iq= 0,schedule =[[Понеділок, null], [Вівторок, null], [Середа, null], [Четвер, null], [П'ятниця, null], [Субота, null], [Неділя, null]]},father=class Human{name= Ivan,surname= Ivanov,year= 36,iq= 0,schedule =[[Понеділок, null], [Вівторок, null], [Середа, null], [Четвер, null], [П'ятниця, null], [Субота, null], [Неділя, null]]}, children=class Human{name= Alex,surname= Ivanov,year= 10,iq= 0,schedule =[[Понеділок, null], [Вівторок, null], [Середа, null], [Четвер, null], [П'ятниця, null], [Субота, null], [Неділя, null]]}, pets=[DOG{ nickname= Rex, age= 0, tricklevel= 0, habits= none, canFly= false, numberOfLegs= 4, hasFur= true }, UNKNOWN{ nickname= Luna, age= 0, tricklevel= 0, habits= none, canFly= false, numberOfLegs= 0, hasFur= false }, DOG{ nickname= T-Rex, age= 0, tricklevel= 0, habits= none, canFly= false, numberOfLegs= 4, hasFur= true }]}";
         assertEquals(expected, family.toString());
         Human anotherHuman = new Human("Jane", "Smith", 1990);
         family.setFather(anotherHuman);
@@ -28,7 +31,7 @@ class FamilyTest {
         family.AddChild(child1);
 
         assertTrue(family.DeleteChild(child1));
-        assertEquals(1, family.getChildren().length);
+        assertEquals(1, family.getChildren().size());
     }
 
     @Test
@@ -39,7 +42,7 @@ class FamilyTest {
         family.AddChild(child1);
 
         assertFalse(family.DeleteChild(child2));
-        assertNotEquals(1, family.getChildren().length);
+        assertNotEquals(1, family.getChildren().size());
     }
     @Test
     void testDeleteChildByIndexSuccess() {
@@ -50,8 +53,8 @@ class FamilyTest {
         family.AddChild(child2);
 
         assertTrue(family.DeleteChild(0));
-        assertEquals(2, family.getChildren().length);
-        assertEquals(child1, family.getChildren()[0]);
+        assertEquals(2, family.getChildren().size());
+        assertEquals(child1, family.getChildren().getFirst());
     }
 
     @Test
@@ -62,7 +65,7 @@ class FamilyTest {
 
 
         assertFalse(family.DeleteChild(2)); // Індекс за межами
-        assertNotEquals(1, family.getChildren().length);
+        assertNotEquals(1, family.getChildren().size());
     }
     @Test
     void testAddChild() {
@@ -71,8 +74,8 @@ class FamilyTest {
         Human child1 = new Human("Volodymyr", "Ivanov",11);
         family.AddChild(child1);
 
-        assertEquals(2, family.getChildren().length);
-        assertEquals(child1, family.getChildren()[1]);
+        assertEquals(2, family.getChildren().size());
+        assertEquals(child1, family.getChildren().get(1));
     }
     @Test
     void testCountFamilyWithChildren() {
@@ -122,7 +125,7 @@ class FamilyTest {
     @Test
     public void testEqualsDifferentClass() {
         Family family1 = CreateFamily();
-        Pet testPet = new DomesticCat(false,"Nicky");
+        Pet testPet = new DomesticCat(false,"Nicky",3,70, new LinkedHashSet<>(Arrays.asList("habit1","habit2")));
         assertFalse(family1.equals(testPet), "Об'єкт не має дорівнювати об'єкту іншого класу");
     }
     @Test

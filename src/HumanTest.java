@@ -6,7 +6,7 @@ class HumanTest {
     @Test
     void testToString() {
         Human human = new Human("John", "Doe", 1985);
-        String expected = "Human{name= John,surname= Doe,year= 1985,iq= 0,schedule =[[Monday, null], [Tuesday, null], [Wednesday, null], [Thursday, null], [Friday, null], [Saturday, null], [Sunday, null]]}";
+        String expected = "class Human{name= John,surname= Doe,year= 1985,iq= 0,schedule =[[Понеділок, null], [Вівторок, null], [Середа, null], [Четвер, null], [П'ятниця, null], [Субота, null], [Неділя, null]]}";
         assertEquals(expected, human.toString());
 
         Human anotherHuman = new Human("Jane", "Smith", 1990);

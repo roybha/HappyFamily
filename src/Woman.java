@@ -1,3 +1,6 @@
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Random;
 import java.time.LocalDate;
 
@@ -8,23 +11,46 @@ final class Woman extends Human implements HumanCreator{
     public Woman (String name,String surname,int year,Woman mother,Man father){
         super(name,surname,year,mother,father);
     }
-    public Woman(String name, String surname, int year, int iq, Pet pet, Woman mother, Man father, String[][] schedule){
-        super(name,surname,year,iq,pet,mother,father,schedule);
+    public Woman(String name, String surname, int year, int iq, LinkedHashSet<Pet> pets, Woman mother, Man father, LinkedHashMap<String,String> schedule){
+        super(name,surname,year,iq,pets,mother,father,schedule);
     }
     @Override
-    public void greetPet(){
-        switch(this.getFamily().getPet().getSpecies()){
-            case "Dog": System.out.printf("%s: Привіт цуцику",this.getClass());break;
-            case "Domestic Cat": System.out.printf("%s: Привіт котику",this.getClass());break;
-            case "Robo Cat": System.out.printf("%s: Привіт роботику",this.getClass());break;
-            case "Fish": System.out.printf("%s: Привіт рибонько",this.getClass());break;
-            case "Snake": System.out.printf("%s: Привіт змієнько",this.getClass());break;
-            case "Turtle": System.out.printf("%s: Привіт черепашко",this.getClass());break;
-            case "Bird": System.out.printf("%s: Привіт пташечка",this.getClass());break;
-            case "Unknown": System.out.printf("%s Привіт, таємниче створіннячко",this.getClass());break;
-            default:break;
+    public void greetPets() {
+        if (this.getFamily().getPets() != null && !this.getFamily().getPets().isEmpty()) {
+            for (Pet pet : this.getFamily().getPets()) { // Проходимося по кожному улюбленцю
+                String species = pet.getSpecies(); // Отримуємо вид тварини
+                switch (species) {
+                    case "Dog":
+                        System.out.printf("%s: Привіт цуцику", this.getClass().getSimpleName());
+                        break;
+                    case "Domestic Cat":
+                        System.out.printf("%s: Привіт котику", this.getClass().getSimpleName());
+                        break;
+                    case "Robo Cat":
+                        System.out.printf("%s: Привіт роботику", this.getClass().getSimpleName());
+                        break;
+                    case "Fish":
+                        System.out.printf("%s: Привіт рибонько", this.getClass().getSimpleName());
+                        break;
+                    case "Snake":
+                        System.out.printf("%s: Привіт змієнько", this.getClass().getSimpleName());
+                        break;
+                    case "Turtle":
+                        System.out.printf("%s: Привіт черепашко", this.getClass().getSimpleName());
+                        break;
+                    case "Bird":
+                        System.out.printf("%s: Привіт пташечка", this.getClass().getSimpleName());
+                        break;
+                    case "Unknown":
+                        System.out.printf("%s: Привіт, таємниче створіннячко", this.getClass().getSimpleName());
+                        break;
+                    default:
+                        System.out.printf("%s: Привіт, невідомий улюбленець!", this.getClass().getSimpleName());
+                        break;
+                }
+                System.out.println("");
+            }
         }
-        System.out.println("");
     }
     public void makeup() {
         System.out.println("Швиденько підфарбовуюсь.Нанесення основи...Нанесення румянцю...Макіяж нанесено!");

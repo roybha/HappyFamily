@@ -1,3 +1,6 @@
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+
 public class DomesticCat  extends Pet implements Foulable{
     public DomesticCat(){
         super();
@@ -7,7 +10,7 @@ public class DomesticCat  extends Pet implements Foulable{
         super(name);
         setSpecies(isSpeciesKnown?Species.DOMESTIC_CAT:Species.UNKNOWN);
     }
-    public DomesticCat(boolean isSpeciesKnown,String nickname, int age, int trickLevel, String[] habits){
+    public DomesticCat(boolean isSpeciesKnown,String nickname, int age, int trickLevel, LinkedHashSet<String> habits){
         super(nickname, age, trickLevel, habits);
         setSpecies(isSpeciesKnown?Species.DOMESTIC_CAT:Species.UNKNOWN);
     }
