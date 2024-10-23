@@ -1,3 +1,7 @@
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.ZoneId;
 import java.util.*;
 
 public class HappyFamily {
@@ -6,8 +10,14 @@ public class HappyFamily {
         InteractWithPets(family,InitializePets());
     }
     public static  Family InitialFamily(){
-        Man someMan = new Man("Олександр","Прокопчук",1997);
-        Woman someWoman = new Woman("Ольга","Іванчук",1997);
+        Man someMan = new Man("Олександр","Прокопчук",	LocalDate.of(1997, Month.MARCH, 1)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli());
+        Woman someWoman = new Woman("Ольга","Іванчук",LocalDate.of(1998, Month.MARCH, 1)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli());
         System.out.println(someMan);
         System.out.println(someWoman);
         System.out.println("Сім'я 1");
@@ -21,10 +31,16 @@ public class HappyFamily {
                 "Середа", "Закупи продуктів","Четвер", "Робота над проєктом",
                 "П'ятниця", "Зустріч з подругами за кавою","Субота", "Сімейна прогулянка",
                 "Неділя", "Відпочинок і читання книги"));
-        Man father = new Man("Іван","Ковальчук",1998,87,null,null,null,fatherSchedule);
+        Man father = new Man("Іван","Ковальчук",	LocalDate.of(1996, Month.MARCH, 1)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli(),87,null,null,null,fatherSchedule);
         System.out.println(father);
         father.repairCar();
-        Woman mother = new Woman("Христина","Возненко",1999,90,null,null,null,motherSchedule);
+        Woman mother = new Woman("Христина","Возненко",LocalDate.of(1997, Month.MARCH, 1)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli(),90,null,null,null,motherSchedule);
         System.out.println(mother);
         mother.makeup();
         Family family = new Family(mother,father);
@@ -33,6 +49,20 @@ public class HappyFamily {
         Human child=mother.bornChild();
         System.out.println(child);
         System.out.println(family);
+        System.out.println("Усиновлюються діти");
+        try {
+            Woman child2 = new Woman("Олена","Яцьків","01/01/2007",88);
+            family.AddChild(child2);
+            Man child3 = new Man("Григорій","Гавриленко","11/12/2005",94);
+            family.AddChild(child3);
+            System.out.println(child2);
+            child2.DescribeAge();
+            System.out.println(child3);
+            child3.DescribeAge();
+            System.out.println(family);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
         return family;
     }
     public  static  void InteractWithPets(Family family,LinkedHashSet<Pet> pets){

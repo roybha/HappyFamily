@@ -1,16 +1,20 @@
+import java.text.ParseException;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
 final class Man extends Human{
-    public Man(String name, String surname,int age){
-        super(name,surname,age);
+    public Man(String name, String surname,long birthDate){
+        super(name,surname,birthDate);
     }
-    public Man(String name, String surname, int year, Woman mother, Man father){
-        super(name,surname,year,mother,father);
+    public Man(String name, String surname, long birthDate, Woman mother, Man father){
+        super(name,surname,birthDate,mother,father);
     }
-    public Man(String name, String surname, int year, int iq, LinkedHashSet<Pet> pets, Woman mother, Man father, LinkedHashMap<String,String> schedule){
-        super(name,surname,year,iq,pets,mother,father,schedule);
+    public Man(String name, String surname, long birthDate, int iq, LinkedHashSet<Pet> pets, Woman mother, Man father, LinkedHashMap<String,String> schedule){
+        super(name,surname,birthDate,iq,pets,mother,father,schedule);
+    }
+    public Man(String name,String surname,String birthDate,int iq) throws ParseException{
+        super(name,surname,birthDate,iq);
     }
     @Override
     public void greetPets(){

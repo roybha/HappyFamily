@@ -1,9 +1,16 @@
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class Human {
   private String name;
   private String surname;
-  private int year;
+  private long birthDate;
   private int iq;
   final private LinkedHashMap<String,String> schedule =  new LinkedHashMap<>();
   private Family family;
@@ -23,8 +30,8 @@ public class Human {
     return this.surname;
   }
 
-  public int getYear() {
-    return this.year;
+  public long getBirthDate() {
+    return this.birthDate;
   }
 
   public int getIq() {
@@ -43,8 +50,8 @@ public class Human {
     this.surname = surname;
   }
 
-  public void setYear(int year) {
-    this.year = year;
+  public void setBirthDate(long birthDate) {
+    this.birthDate = birthDate;
   }
 
   public void setIq(int iq) {
@@ -100,20 +107,24 @@ public class Human {
     getSchedule().forEach((k, v) -> entries.add("[" + k + ", " + (v.isEmpty() ? "null" : v) + "]"));
     String scheduleString = "[" + String.join(", ", entries) + "]";
 
-    return this.getClass()+"{name= " + this.getName() + ",surname= " + this.getSurname() + ",year= " + this.getYear() + ",iq= " + this.getIq() + ",schedule =" + scheduleString + "}";
+
+    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+    String birthDateStr = format.format(new Date(getBirthDate()));
+
+    return this.getClass()+"{name= " + this.getName() + ",surname= " + this.getSurname() + ",birthDate= " + birthDateStr + ",iq= " + this.getIq() + ",schedule =" + scheduleString + "}";
   }
 
-  public Human(String name, String surname, int year) {
+  public Human(String name, String surname, long birthDate) {
     setName(name);
     setSurname(surname);
-    setYear(year);
+    setBirthDate(birthDate);
     InitializeSchedule();
   }
 
-  public Human(String name, String surname, int year, Human mother, Human father) {
+  public Human(String name, String surname, long birthDate, Human mother, Human father) {
     setName(name);
     setSurname(surname);
-    setYear(year);
+    setBirthDate(birthDate);
     InitializeSchedule();
     if(mother!=null&& mother.family!=null)
     {
@@ -124,10 +135,10 @@ public class Human {
     }
   }
 
-  public Human(String name, String surname, int year, int iq, LinkedHashSet<Pet> pets, Human mother, Human father, LinkedHashMap<String,String> schedule) {
+  public Human(String name, String surname, long birthDate, int iq, LinkedHashSet<Pet> pets, Human mother, Human father, LinkedHashMap<String,String> schedule) {
     setName(name);
     setSurname(surname);
-    setYear(year);
+    setBirthDate(birthDate);
     setIq(iq);
     InitializeSchedule();
     setSchedule(schedule);
@@ -143,6 +154,15 @@ public class Human {
 
   public Human() {
   }
+  public Human(String name,String surname,String birthDate,int iq)throws ParseException {
+     setName(name);
+     setSurname(surname);
+     setIq(iq);
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    Date dateOfBirth = sdf.parse(birthDate);
+    setBirthDate(dateOfBirth.getTime());
+    InitializeSchedule();
+  }
 
   @Override
   public boolean equals(Object obj) {
@@ -154,7 +174,7 @@ public class Human {
       return false; // Якщо хеш-коди не збігаються, об'єкти точно не рівні
     }
     // Порівняння полів з урахуванням можливих null-значень
-    return year == human.year &&
+    return birthDate == human.birthDate &&
             iq == human.iq &&
             Objects.equals(name, human.name) &&
             Objects.equals(surname, human.surname) &&
@@ -163,7 +183,7 @@ public class Human {
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, surname, year, iq) + schedule.hashCode();
+    return Objects.hash(name, surname, birthDate, iq) + schedule.hashCode();
   }
 
   @Override
@@ -183,5 +203,14 @@ public class Human {
     schedule.put("П'ятниця", "");
     schedule.put("Субота", "");
     schedule.put("Неділя", "");
+  }
+  public void DescribeAge(){
+    // Перетворення birthDate в LocalDate для підрахунку років
+    LocalDate birthDate = Instant.ofEpochMilli(this.birthDate).atZone(ZoneId.systemDefault()).toLocalDate();
+    LocalDate currentDate = Instant.now().atZone(ZoneId.systemDefault()).toLocalDate();
+    long years = ChronoUnit.YEARS.between(birthDate, currentDate);
+    long months = ChronoUnit.MONTHS.between(birthDate, currentDate) % 12;
+    long days = ChronoUnit.DAYS.between(birthDate.plusYears(years).plusMonths(months), currentDate);
+    System.out.printf("Мене звати %s,мені наразі Років %d,місяців %d,днів тижня %d%n", this.getName(),years, months, days);
   }
 }

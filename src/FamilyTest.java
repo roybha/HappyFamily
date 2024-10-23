@@ -1,15 +1,27 @@
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.ZoneId;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class FamilyTest {
     Family CreateFamily(){
-        Human mother = new Human("Anna", "Ivanova",33);
-        Human father = new Human("Ivan", "Ivanov",36);
+        Human mother = new Human("Anna", "Ivanova", LocalDate.of(1989, Month.MARCH, 1)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli());
+        Human father = new Human("Ivan", "Ivanov",LocalDate.of(1989, Month.APRIL, 1)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli());
         Family family = new Family(mother, father);
-        family.AddChild(new Human("Alex","Ivanov",10));
+        family.AddChild(new Human("Alex","Ivanov",LocalDate.of(2018, Month.AUGUST, 23)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli()));
         LinkedHashSet<Pet> pets = new LinkedHashSet<>(List.of(new Dog( true,"Rex"),new Dog( false,"Luna"),new Dog( true,"T-Rex")));
         family.setPets(pets);
         return family;
@@ -18,16 +30,22 @@ class FamilyTest {
     void testToString() {
 
         Family family = CreateFamily();
-        String expected = "class Family{ mother=class Human{name= Anna,surname= Ivanova,year= 33,iq= 0,schedule =[[Понеділок, null], [Вівторок, null], [Середа, null], [Четвер, null], [П'ятниця, null], [Субота, null], [Неділя, null]]},father=class Human{name= Ivan,surname= Ivanov,year= 36,iq= 0,schedule =[[Понеділок, null], [Вівторок, null], [Середа, null], [Четвер, null], [П'ятниця, null], [Субота, null], [Неділя, null]]}, children=class Human{name= Alex,surname= Ivanov,year= 10,iq= 0,schedule =[[Понеділок, null], [Вівторок, null], [Середа, null], [Четвер, null], [П'ятниця, null], [Субота, null], [Неділя, null]]}, pets=[DOG{ nickname= Rex, age= 0, tricklevel= 0, habits= none, canFly= false, numberOfLegs= 4, hasFur= true }, UNKNOWN{ nickname= Luna, age= 0, tricklevel= 0, habits= none, canFly= false, numberOfLegs= 0, hasFur= false }, DOG{ nickname= T-Rex, age= 0, tricklevel= 0, habits= none, canFly= false, numberOfLegs= 4, hasFur= true }]}";
+        String expected = "class Family{ mother=class Human{name= Anna,surname= Ivanova,birthDate= 01/03/1989,iq= 0,schedule =[[Понеділок, null], [Вівторок, null], [Середа, null], [Четвер, null], [П'ятниця, null], [Субота, null], [Неділя, null]]},father=class Human{name= Ivan,surname= Ivanov,birthDate= 01/04/1989,iq= 0,schedule =[[Понеділок, null], [Вівторок, null], [Середа, null], [Четвер, null], [П'ятниця, null], [Субота, null], [Неділя, null]]}, children=class Human{name= Alex,surname= Ivanov,birthDate= 23/08/2018,iq= 0,schedule =[[Понеділок, null], [Вівторок, null], [Середа, null], [Четвер, null], [П'ятниця, null], [Субота, null], [Неділя, null]]}, pets=[DOG{ nickname= Rex, age= 0, tricklevel= 0, habits= none, canFly= false, numberOfLegs= 4, hasFur= true }, UNKNOWN{ nickname= Luna, age= 0, tricklevel= 0, habits= none, canFly= false, numberOfLegs= 0, hasFur= false }, DOG{ nickname= T-Rex, age= 0, tricklevel= 0, habits= none, canFly= false, numberOfLegs= 4, hasFur= true }]}";
         assertEquals(expected, family.toString());
-        Human anotherHuman = new Human("Jane", "Smith", 1990);
+        Human anotherHuman = new Human("Jane", "Smith", LocalDate.of(1999, Month.JUNE, 1)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli());
         family.setFather(anotherHuman);
         assertNotEquals(expected, anotherHuman.toString());
     }
     @Test
     void testDeleteChildSuccess() {
         Family family = CreateFamily();
-        Human child1 = new Human("Bohdan", "Ivanov",6);
+        Human child1 = new Human("Bohdan", "Ivanov",LocalDate.of(2016, Month.AUGUST, 23)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli());
         family.AddChild(child1);
 
         assertTrue(family.DeleteChild(child1));
@@ -37,8 +55,14 @@ class FamilyTest {
     @Test
     void testDeleteChildNotFound() {
         Family family = CreateFamily();
-        Human child1 = new Human("Bohdan", "Ivanov",6);
-        Human child2 = new Human("Katya", "Ivanova",8);
+        Human child1 = new Human("Bohdan", "Ivanov",LocalDate.of(2018, Month.AUGUST, 23)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli());
+        Human child2 = new Human("Katya", "Ivanova",LocalDate.of(2018, Month.AUGUST, 23)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli());
         family.AddChild(child1);
 
         assertFalse(family.DeleteChild(child2));
@@ -47,8 +71,14 @@ class FamilyTest {
     @Test
     void testDeleteChildByIndexSuccess() {
         Family family = CreateFamily();
-        Human child1 = new Human("Bohdan", "Ivanov",6);
-        Human child2 = new Human("Katya", "Ivanova",8);
+        Human child1 = new Human("Bohdan", "Ivanov",LocalDate.of(2018, Month.AUGUST, 23)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli());
+        Human child2 = new Human("Katya", "Ivanova",LocalDate.of(2018, Month.AUGUST, 23)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli());
         family.AddChild(child1);
         family.AddChild(child2);
 
@@ -60,7 +90,10 @@ class FamilyTest {
     @Test
     void testDeleteChildByIndexOutOfBounds() {
         Family family = CreateFamily();
-        Human child1 = new Human("Bohdan", "Ivanov",6);
+        Human child1 = new Human("Bohdan", "Ivanov",LocalDate.of(2018, Month.AUGUST, 23)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli());
         family.AddChild(child1);
 
 
@@ -71,7 +104,10 @@ class FamilyTest {
     void testAddChild() {
        Family family = CreateFamily();
 
-        Human child1 = new Human("Volodymyr", "Ivanov",11);
+        Human child1 = new Human("Volodymyr", "Ivanov",	LocalDate.of(2018, Month.AUGUST, 23)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli());
         family.AddChild(child1);
 
         assertEquals(2, family.getChildren().size());
