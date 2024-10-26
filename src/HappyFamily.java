@@ -4,10 +4,13 @@ import java.time.Month;
 import java.time.ZoneId;
 import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class HappyFamily {
     public static void main(String[] args)  {
         Family family = InitialFamily();
         InteractWithPets(family,InitializePets());
+        FamiliesService();
     }
     public static  Family InitialFamily(){
         Man someMan = new Man("Олександр","Прокопчук",	LocalDate.of(1997, Month.MARCH, 1)
@@ -118,5 +121,22 @@ public class HappyFamily {
         Bird bird1 = new Bird(true,"Піпа", 1, 55, new LinkedHashSet<>(Arrays.asList("щебетати", "літати навколо клітки","щебетати", "літати навколо клітки")));
         pets.add(bird1);
         return pets;
+    }
+    public static void FamiliesService(){
+        FamilyTest temp = new FamilyTest();
+        List<Family>familyList=temp.CreateFamilyList();
+        System.out.printf("Родини,кількість яких більша %d%n",3);
+        List<Family> biggerFamilies = FamiliesService.getFamiliesBiggerOrLessThan(familyList,3,true);
+        FamiliesService.displayAllFamilies(biggerFamilies);
+        System.out.printf("Родини,кількість яких менше %d%n",4);
+        List<Family> lessFamilies = FamiliesService.getFamiliesBiggerOrLessThan(familyList,4,false);
+        FamiliesService.displayAllFamilies(lessFamilies);
+        int familiesEqualsMembersFive = FamiliesService.countFamiliesWithMemberNumber(familyList,5);
+        System.out.printf("Кількість родин,кількість членів яких дорівнює %d = %n",5,familiesEqualsMembersFive);
+        System.out.println("Загальна кількість членів родини ДО видалення дітей старше 5");
+        familyList.stream().forEach(family1 -> System.out.printf("Кількість членів родини - %d%n",family1.CountFamily()));
+        FamiliesService.deleteAllChildrenOlderThan(familyList,5);
+        System.out.println("Загальна кількість членів родини ПІСЛЯ видалення дітей старше 5");
+        familyList.stream().forEach(family1 -> System.out.printf("Кількість членів родини - %d%n",family1.CountFamily()));
     }
 }

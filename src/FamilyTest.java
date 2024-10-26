@@ -8,7 +8,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FamilyTest {
-    Family CreateFamily(){
+    Family CreateFamilies(){
         Human mother = new Human("Anna", "Ivanova", LocalDate.of(1989, Month.MARCH, 1)
                 .atStartOfDay(ZoneId.systemDefault())
                 .toInstant()
@@ -26,10 +26,38 @@ class FamilyTest {
         family.setPets(pets);
         return family;
     }
+    public List<Family> CreateFamilyList(){
+        Family family = CreateFamilies();
+        Family family2 = CreateFamilies();
+        family2.AddChild( new Human("Iryna","Ivanova",LocalDate.of(2019, Month.AUGUST, 23)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli()));
+        Family family3 = CreateFamilies();
+        family3.AddChild(new Human("Vasyl","Ivanov",LocalDate.of(2015, Month.AUGUST, 23)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli()));
+        family3.AddChild(new Human("Taras","Ivanov",LocalDate.of(2010, Month.AUGUST, 23)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli()));
+        Family family4 = CreateFamilies();
+        family4.AddChild(new Human("Oleg","Ivanov",LocalDate.of(2023, Month.AUGUST, 23)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli()));
+        Family family5 = CreateFamilies();
+        family5.AddChild(new Human("Yaroslav","Ivanov",LocalDate.of(2020, Month.AUGUST, 23)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli()));
+        return new ArrayList<>(Arrays.asList(family, family2, family3, family4, family5));
+    }
     @Test
     void testToString() {
 
-        Family family = CreateFamily();
+        Family family = CreateFamilies();
         String expected = "class Family{ mother=class Human{name= Anna,surname= Ivanova,birthDate= 01/03/1989,iq= 0,schedule =[[Понеділок, null], [Вівторок, null], [Середа, null], [Четвер, null], [П'ятниця, null], [Субота, null], [Неділя, null]]},father=class Human{name= Ivan,surname= Ivanov,birthDate= 01/04/1989,iq= 0,schedule =[[Понеділок, null], [Вівторок, null], [Середа, null], [Четвер, null], [П'ятниця, null], [Субота, null], [Неділя, null]]}, children=class Human{name= Alex,surname= Ivanov,birthDate= 23/08/2018,iq= 0,schedule =[[Понеділок, null], [Вівторок, null], [Середа, null], [Четвер, null], [П'ятниця, null], [Субота, null], [Неділя, null]]}, pets=[DOG{ nickname= Rex, age= 0, tricklevel= 0, habits= none, canFly= false, numberOfLegs= 4, hasFur= true }, UNKNOWN{ nickname= Luna, age= 0, tricklevel= 0, habits= none, canFly= false, numberOfLegs= 0, hasFur= false }, DOG{ nickname= T-Rex, age= 0, tricklevel= 0, habits= none, canFly= false, numberOfLegs= 4, hasFur= true }]}";
         assertEquals(expected, family.toString());
         Human anotherHuman = new Human("Jane", "Smith", LocalDate.of(1999, Month.JUNE, 1)
@@ -41,7 +69,7 @@ class FamilyTest {
     }
     @Test
     void testDeleteChildSuccess() {
-        Family family = CreateFamily();
+        Family family = CreateFamilies();
         Human child1 = new Human("Bohdan", "Ivanov",LocalDate.of(2016, Month.AUGUST, 23)
                 .atStartOfDay(ZoneId.systemDefault())
                 .toInstant()
@@ -54,7 +82,7 @@ class FamilyTest {
 
     @Test
     void testDeleteChildNotFound() {
-        Family family = CreateFamily();
+        Family family = CreateFamilies();
         Human child1 = new Human("Bohdan", "Ivanov",LocalDate.of(2018, Month.AUGUST, 23)
                 .atStartOfDay(ZoneId.systemDefault())
                 .toInstant()
@@ -70,7 +98,7 @@ class FamilyTest {
     }
     @Test
     void testDeleteChildByIndexSuccess() {
-        Family family = CreateFamily();
+        Family family = CreateFamilies();
         Human child1 = new Human("Bohdan", "Ivanov",LocalDate.of(2018, Month.AUGUST, 23)
                 .atStartOfDay(ZoneId.systemDefault())
                 .toInstant()
@@ -89,7 +117,7 @@ class FamilyTest {
 
     @Test
     void testDeleteChildByIndexOutOfBounds() {
-        Family family = CreateFamily();
+        Family family = CreateFamilies();
         Human child1 = new Human("Bohdan", "Ivanov",LocalDate.of(2018, Month.AUGUST, 23)
                 .atStartOfDay(ZoneId.systemDefault())
                 .toInstant()
@@ -102,7 +130,7 @@ class FamilyTest {
     }
     @Test
     void testAddChild() {
-       Family family = CreateFamily();
+       Family family = CreateFamilies();
 
         Human child1 = new Human("Volodymyr", "Ivanov",	LocalDate.of(2018, Month.AUGUST, 23)
                 .atStartOfDay(ZoneId.systemDefault())
@@ -115,72 +143,99 @@ class FamilyTest {
     }
     @Test
     void testCountFamilyWithChildren() {
-        Family family = CreateFamily();
+        Family family = CreateFamilies();
         assertEquals(3, family.CountFamily()); // Мати + Батько + Дитина
     }
 
     @Test
     void testCountFamilyWithoutChildren() {
-        Family family = CreateFamily();
+        Family family = CreateFamilies();
         family.DeleteChild(0);
         assertEquals(2, family.CountFamily()); // Мати + Батько
     }
     @Test
     public void testEqualsReflexive() {
-        Family family = CreateFamily();
+        Family family = CreateFamilies();
         assertTrue(family.equals(family), "Об'єкт має дорівнювати самому собі (рефлексивність)");
     }
     @Test
     public void testEqualsSymmetric() {
-         Family family1 = CreateFamily();
-         Family family2 = CreateFamily();
+         Family family1 = CreateFamilies();
+         Family family2 = CreateFamilies();
          assertTrue(family1.equals(family2), "Якщо family1 дорівнює family2, то family2 має дорівнювати family1 (симетричність)");
          assertTrue(family2.equals(family1), "Якщо  family2 дорівнює family1, то family1 має дорівнювати family2 (симетричність)");
     }
     @Test
     public void testEqualsTransitive() {
-        Family family1 = CreateFamily();
-        Family family2 = CreateFamily();
-        Family family3 = CreateFamily();
+        Family family1 = CreateFamilies();
+        Family family2 = CreateFamilies();
+        Family family3 = CreateFamilies();
         assertTrue(family1.equals(family2), "Транзитивність: family1 дорівнює family2");
         assertTrue(family2.equals(family3), "Транзитивність: family2 дорівнює family3");
         assertTrue(family1.equals(family3), "Транзитивність: family1 дорівнює family3");
     }
     @Test
     public void testEqualsConsistency() {
-        Family family1 = CreateFamily();
-        Family family2 = CreateFamily();
+        Family family1 = CreateFamilies();
+        Family family2 = CreateFamilies();
         assertTrue(family1.equals(family2), "Перевірка консистентності: family1 дорівнює family2");
         assertTrue(family1.equals(family2), "Перевірка консистентності: повторне порівняння повинно бути однаковим");
     }
     @Test
     public void testEqualsNull() {
-        Family family1 = CreateFamily();
+        Family family1 = CreateFamilies();
         assertFalse(family1.equals(null), "Об'єкт не має дорівнювати null");
     }
     @Test
     public void testEqualsDifferentClass() {
-        Family family1 = CreateFamily();
+        Family family1 = CreateFamilies();
         Pet testPet = new DomesticCat(false,"Nicky",3,70, new LinkedHashSet<>(Arrays.asList("habit1","habit2")));
         assertFalse(family1.equals(testPet), "Об'єкт не має дорівнювати об'єкту іншого класу");
     }
     @Test
     public void testHashCodeConsistency() {
-        Family family1 = CreateFamily();
+        Family family1 = CreateFamilies();
         int initialHashCode = family1.hashCode();
         assertEquals(initialHashCode,family1.hashCode(), "Хеш-код має залишатися постійним при повторних викликах");
     }
     @Test
     public void testHashCodeEqualsContract() {
-         Family family1 = CreateFamily();
-         Family family2 = CreateFamily();
+         Family family1 = CreateFamilies();
+         Family family2 = CreateFamilies();
         assertEquals(family1.hashCode(),family2.hashCode(), "Рівні об'єкти мають однаковий хеш-код");
     }
     @Test
     public void testNotEquals() {
-        Family family1 = CreateFamily();
-        Family family2 = CreateFamily();
+        Family family1 = CreateFamilies();
+        Family family2 = CreateFamilies();
         family2.setChildren(null);
         assertFalse(family1.equals(family2), "Різні об'єкти не мають дорівнювати один одному");
+    }
+
+    @Test
+    public void FamilyServiceTest(){
+
+        List<Family>familyList=CreateFamilyList();
+        System.out.printf("Родини,кількість яких більша %d%n",3);
+        List<Family> biggerFamilies = FamiliesService.getFamiliesBiggerOrLessThan(familyList,3,true);
+        assertEquals(4,biggerFamilies.size());
+        FamiliesService.displayAllFamilies(biggerFamilies);
+        System.out.printf("Родини,кількість яких менше %d%n",4);
+        List<Family> lessFamilies = FamiliesService.getFamiliesBiggerOrLessThan(familyList,4,false);
+        FamiliesService.displayAllFamilies(lessFamilies);
+        assertEquals(1,lessFamilies.size());
+        int familiesEqualsMembersFive = FamiliesService.countFamiliesWithMemberNumber(familyList,5);
+        System.out.printf("Кількість родин,кількість членів яких дорівнює %d = %n",5,familiesEqualsMembersFive);
+        assertEquals(1,familiesEqualsMembersFive);
+        System.out.println("Загальна кількість членів родини ДО видалення дітей старше 5");
+        familyList.stream().forEach(family1 -> System.out.printf("Кількість членів родини - %d%n",family1.CountFamily()));
+        FamiliesService.deleteAllChildrenOlderThan(familyList,5);
+        System.out.println("Загальна кількість членів родини ПІСЛЯ видалення дітей старше 5");
+        familyList.stream().forEach(family1 -> System.out.printf("Кількість членів родини - %d%n",family1.CountFamily()));
+        assertEquals(2,familyList.get(0).CountFamily());
+        assertEquals(2,familyList.get(1).CountFamily());
+        assertEquals(2,familyList.get(2).CountFamily());
+        assertEquals(3,familyList.get(3).CountFamily());
+        assertEquals(3,familyList.get(4).CountFamily());
     }
 }
