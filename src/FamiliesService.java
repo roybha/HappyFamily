@@ -3,10 +3,12 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class FamiliesService {
     public static void displayAllFamilies(List<Family> families){
-        families.stream().forEach(family -> System.out.printf("%s%n", family.toString()));
+        IntStream.range(0, families.size()).forEach(i->System.out.printf("%d - %s%n",i+1, families.get(i).prettyFormat()));
+       // families.stream().forEach(family -> System.out.printf("%s%n", family.prettyFormat()));
     }
     public static List<Family>getFamiliesBiggerOrLessThan(List<Family> families,int count,boolean option){
         return (option)?families

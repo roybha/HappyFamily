@@ -1,3 +1,4 @@
+import java.lang.reflect.Field;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -7,20 +8,20 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Family {
-private Human mother;
-private Human father;
+private Woman mother;
+private Man father;
 private ArrayList<Human> children;
 private LinkedHashSet<Pet> pets;
-public Human getMother() {
+public Woman getMother() {
     return mother;
 }
-public void setMother(Human mother) {
+public void setMother(Woman mother) {
     this.mother = mother;
 }
-public Human getFather() {
+public Man getFather() {
     return father;
 }
-public void setFather(Human father) {
+public void setFather(Man father) {
     this.father = father;
 }
 public ArrayList<Human> getChildren() {
@@ -41,7 +42,7 @@ public Pet getPet(Pet pet) {
 public void setPets(LinkedHashSet<Pet> pets) {
     this.pets = pets;
 }
-public Family(Human mother, Human father) {
+public Family(Woman mother, Man father) {
     this.mother = mother;
     this.father = father;
     mother.setFamily(this);
@@ -138,5 +139,49 @@ public void AddChild(Human child) {
         } finally {
             super.finalize();
         }
+    }
+    public String prettyFormat(){
+        StringBuilder builder = new StringBuilder();
+        builder.append(this.getClass().getSimpleName()).append("\n");
+        builder.append("Mother: ").append(this.mother.toString()).append(",\n");
+        builder.append("Father: ").append(this.father.toString()).append(",\n");
+
+
+        String someInfo = InfoAboutChildren(); // рядок з інформацією про дітей
+        if (!someInfo.equals("none")) {
+            List<String> childrenInfo = Stream.of(someInfo.split("}, "))
+                    .map(info -> info.endsWith("}") ? info : info + "}") // додаємо "}" назад, якщо його немає
+                    .map(info -> info.replaceFirst("^\\s*,?", "") // прибираємо пробіл та кому, якщо є
+                            .replaceFirst(",\\s*$", "")) // прибираємо кому, якщо вона є в кінці
+                    .collect(Collectors.toList());
+            builder.append("Children: \n");
+            childrenInfo.forEach(info -> builder.append(info).append("\n"));
+        }
+        else{
+            builder.append("Children: none\n");
+        }
+
+
+        // Отримуємо інформацію про тварин
+        String petsInfo = (this.pets != null) ? this.pets.toString() : "none";
+        if (!petsInfo.equals("none")) {
+            // Видаляємо [ на початку і } на кінці
+            petsInfo = petsInfo.replaceFirst("^\\[", "").replaceFirst("\\]$", ""); // прибираємо "[" на початку і "]" на кінці
+
+            // Обробляємо інформацію про тварин
+            List<String> petInfoList = Stream.of(petsInfo.split("}, "))
+                    .map(info -> info.endsWith("}") ? info : info + "}") // додаємо "}" назад, якщо його немає
+                    .map(info -> info.replaceFirst("^\\s*,?", "") // прибираємо пробіл та кому, якщо є
+                            .replaceFirst(",\\s*$", "")) // прибираємо кому, якщо вона є в кінці
+                    .collect(Collectors.toList());
+
+            builder.append("Pets: \n");
+            // Додаємо відступи перед інформацією про тварин
+            petInfoList.forEach(info -> builder.append(info).append("\n"));
+        } else {
+            builder.append("Pets: none\n");
+        }
+
+        return builder.toString();
     }
 }

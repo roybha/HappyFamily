@@ -111,7 +111,7 @@ public class Human {
     SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
     String birthDateStr = format.format(new Date(getBirthDate()));
 
-    return this.getClass()+"{name= " + this.getName() + ",surname= " + this.getSurname() + ",birthDate= " + birthDateStr + ",iq= " + this.getIq() + ",schedule =" + scheduleString + "}";
+    return this.getClass().getSimpleName()+"{name= " + this.getName() + ",surname= " + this.getSurname() + ",birthDate= " + birthDateStr + ",iq= " + this.getIq() + ",schedule =" + scheduleString + "}";
   }
 
   public Human(String name, String surname, long birthDate) {
@@ -121,30 +121,30 @@ public class Human {
     InitializeSchedule();
   }
 
-  public Human(String name, String surname, long birthDate, Human mother, Human father) {
+  public Human(String name, String surname, long birthDate,Woman mother, Man father) {
     setName(name);
     setSurname(surname);
     setBirthDate(birthDate);
     InitializeSchedule();
-    if(mother!=null&& mother.family!=null)
+    if(mother!=null&& mother.getFamily()!=null)
     {
       mother.getFamily().AddChild(this);
-      this.family = mother.family;
+      this.family = mother.getFamily();
       family.setFather(father);
       family.setMother(mother);
     }
   }
 
-  public Human(String name, String surname, long birthDate, int iq, LinkedHashSet<Pet> pets, Human mother, Human father, LinkedHashMap<String,String> schedule) {
+  public Human(String name, String surname, long birthDate, int iq, LinkedHashSet<Pet> pets, Woman mother, Man father, LinkedHashMap<String,String> schedule) {
     setName(name);
     setSurname(surname);
     setBirthDate(birthDate);
     setIq(iq);
     InitializeSchedule();
     setSchedule(schedule);
-    if(father!=null&& father.family!=null) {
+    if(father!=null&& father.getFamily()!=null) {
       father.getFamily().AddChild(this);
-      this.family = mother.family;
+      this.family = mother.getFamily();
       this.family.setMother(mother);
       this.family.setFather(father);
       this.family.setPets(pets);

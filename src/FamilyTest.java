@@ -9,15 +9,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FamilyTest {
     Family CreateFamilies(){
-        Human mother = new Human("Anna", "Ivanova", LocalDate.of(1989, Month.MARCH, 1)
+        Human mother = new Woman("Anna", "Ivanova", LocalDate.of(1989, Month.MARCH, 1)
                 .atStartOfDay(ZoneId.systemDefault())
                 .toInstant()
                 .toEpochMilli());
-        Human father = new Human("Ivan", "Ivanov",LocalDate.of(1989, Month.APRIL, 1)
+        Human father = new Man("Ivan", "Ivanov",LocalDate.of(1989, Month.APRIL, 1)
                 .atStartOfDay(ZoneId.systemDefault())
                 .toInstant()
                 .toEpochMilli());
-        Family family = new Family(mother, father);
+        Family family = new Family((Woman) mother, (Man) father);
         family.AddChild(new Human("Alex","Ivanov",LocalDate.of(2018, Month.AUGUST, 23)
                 .atStartOfDay(ZoneId.systemDefault())
                 .toInstant()
@@ -58,13 +58,13 @@ class FamilyTest {
     void testToString() {
 
         Family family = CreateFamilies();
-        String expected = "class Family{ mother=class Human{name= Anna,surname= Ivanova,birthDate= 01/03/1989,iq= 0,schedule =[[Понеділок, null], [Вівторок, null], [Середа, null], [Четвер, null], [П'ятниця, null], [Субота, null], [Неділя, null]]},father=class Human{name= Ivan,surname= Ivanov,birthDate= 01/04/1989,iq= 0,schedule =[[Понеділок, null], [Вівторок, null], [Середа, null], [Четвер, null], [П'ятниця, null], [Субота, null], [Неділя, null]]}, children=class Human{name= Alex,surname= Ivanov,birthDate= 23/08/2018,iq= 0,schedule =[[Понеділок, null], [Вівторок, null], [Середа, null], [Четвер, null], [П'ятниця, null], [Субота, null], [Неділя, null]]}, pets=[DOG{ nickname= Rex, age= 0, tricklevel= 0, habits= none, canFly= false, numberOfLegs= 4, hasFur= true }, UNKNOWN{ nickname= Luna, age= 0, tricklevel= 0, habits= none, canFly= false, numberOfLegs= 0, hasFur= false }, DOG{ nickname= T-Rex, age= 0, tricklevel= 0, habits= none, canFly= false, numberOfLegs= 4, hasFur= true }]}";
+        String expected = "class Family{ mother=Human{name= Anna,surname= Ivanova,birthDate= 01/03/1989,iq= 0,schedule =[[Понеділок, null], [Вівторок, null], [Середа, null], [Четвер, null], [П'ятниця, null], [Субота, null], [Неділя, null]]},father=Human{name= Ivan,surname= Ivanov,birthDate= 01/04/1989,iq= 0,schedule =[[Понеділок, null], [Вівторок, null], [Середа, null], [Четвер, null], [П'ятниця, null], [Субота, null], [Неділя, null]]}, children=Human{name= Alex,surname= Ivanov,birthDate= 23/08/2018,iq= 0,schedule =[[Понеділок, null], [Вівторок, null], [Середа, null], [Четвер, null], [П'ятниця, null], [Субота, null], [Неділя, null]]}, pets=[DOG{ nickname= Rex, age= 0, tricklevel= 0, habits= none, canFly= false, numberOfLegs= 4, hasFur= true }, UNKNOWN{ nickname= Luna, age= 0, tricklevel= 0, habits= none, canFly= false, numberOfLegs= 0, hasFur= false }, DOG{ nickname= T-Rex, age= 0, tricklevel= 0, habits= none, canFly= false, numberOfLegs= 4, hasFur= true }]}";
         assertEquals(expected, family.toString());
-        Human anotherHuman = new Human("Jane", "Smith", LocalDate.of(1999, Month.JUNE, 1)
+        Human anotherHuman = new Man("Jack", "Smith", LocalDate.of(1999, Month.JUNE, 1)
                 .atStartOfDay(ZoneId.systemDefault())
                 .toInstant()
                 .toEpochMilli());
-        family.setFather(anotherHuman);
+        family.setFather((Man) anotherHuman);
         assertNotEquals(expected, anotherHuman.toString());
     }
     @Test

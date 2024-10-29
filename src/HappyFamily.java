@@ -8,9 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HappyFamily {
     public static void main(String[] args)  {
-        Family family = InitialFamily();
-        InteractWithPets(family,InitializePets());
-        FamiliesService();
+        FamilyController controller = new FamilyController();
+        controller.start();
     }
     public static  Family InitialFamily(){
         Man someMan = new Man("Олександр","Прокопчук",	LocalDate.of(1997, Month.MARCH, 1)
