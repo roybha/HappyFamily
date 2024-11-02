@@ -1,6 +1,13 @@
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -77,5 +84,46 @@ public class FamiliesService {
     }
     public static void addPet(int index,Pet pet){
         getPets(index).add(pet);
+    }
+
+    public void saveData(String filePath) {
+        if(filePath.equals("families.dat")){
+            System.out.println("Зміна структури цього файлу може зламати логіку роботи програми,операцію скаосовано.");
+            return;
+        }
+        List<Family> families = collectionFamilyDAO.getAllFamilies();
+
+        try (ObjectOutputStream out = new ObjectOutputStream(Files.newOutputStream(Path.of(filePath)))) {
+            for (Family family : families) {
+                out.writeObject(family);
+            }
+            System.out.println("Дані успішно збережено у файл: " + filePath);
+        } catch (IOException e) {
+            System.out.println("Помилка при збереженні даних: " + e.getMessage());
+        }
+    }
+
+    // Метод для завантаження даних з файлу
+    public void loadData(String filePath) {
+        List<Family> families = new ArrayList<>();
+        try (ObjectInputStream in = new ObjectInputStream(Files.newInputStream(Path.of(filePath)))) {
+            while (true) {
+                try {
+
+                    Object readObject = in.readObject();
+                    if (readObject instanceof Family) {
+                        families.add((Family) readObject);
+                    } else {
+                        System.out.println("Помилка: очікувався об'єкт Family, але отримано: " + readObject.getClass().getName());
+                    }
+                } catch (EOFException e) {
+                    break;
+                }
+            }
+            collectionFamilyDAO.loadData(families);
+            System.out.println("Дані успішно завантажено з файлу: " + filePath);
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Помилка при завантаженні даних: " + e.getMessage());
+        }
     }
 }

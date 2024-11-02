@@ -9,43 +9,52 @@ public class CollectionFamilyDAO  implements FamilyDAO {
     private static final List<String> maleNames = Arrays.asList("Андрій","Богдан","Євген","Олександр","Дмитро","Роман","Oлексій","Ілля");
     private static final List<String> femaleNames = Arrays.asList("Оля","Ганна","Тая","Вероніка","Олена","Юля","Олеся","Віка");
     private  List<Family> families;
+    public final LoggerService logger = new LoggerService();
     public CollectionFamilyDAO(List<Family> families) {
         this.families = families;
     }
 
     @Override
     public List<Family> getAllFamilies() {
+        logger.info("Отримання списку сімей");
         return families;
     }
 
     @Override
     public Family getFamilyByIndex(int index) {
         if (index >= 0 && index < families.size()) {
+            logger.info("Отримання сім'ї за індексом "+index);
             return families.get(index);
         }
+        logger.error("Сім'я за індексом "+index+" відсутня в списку сімей.Отримання не відбулося");
         return null;
     }
 
     @Override
     public boolean deleteFamily(int index) {
         if (index >= 0 && index < families.size()) {
-            families.remove(index);
+             deleteFamily(families.get(index));
+            logger.info("Видалення сім'ї зі списку зі індексом "+index);
             return true;
         }
+        logger.error("Сім'я за індексом "+index+" відсутня в списку сімей.Видалення не відбулося");
         return false;
     }
 
     @Override
     public boolean deleteFamily(Family family) {
+        logger.info("Видалення сім'ї зі списку за об'єктом "+family);
         return families.remove(family);
     }
 
     @Override
     public void saveFamily(Family family) {
         if (!families.stream().anyMatch(f->f==family)) {
+            logger.info("Додавання сім'ї до списку ");
             families.add(family);
         } else {
             int index = families.indexOf(family);
+            logger.info("Оновлення сім'ї в списку за індексом "+index);
             families.set(index, family);
         }
     }
@@ -86,5 +95,11 @@ public class CollectionFamilyDAO  implements FamilyDAO {
                 new Man(name,family.getFather().getSurname(),dateInMillis):
                 new Woman(name,family.getFather().getSurname(),dateInMillis);
         return child;
+    }
+
+    @Override
+    public void loadData(List<Family> families) {
+        this.families = families;
+        logger.info("Присвоєння списку сімей даних прочитаних з файла");
     }
 }

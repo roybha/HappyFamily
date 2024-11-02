@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.text.ParseException;
 import java.time.Instant;
 import java.util.HashSet;
@@ -6,7 +7,7 @@ import java.util.LinkedHashSet;
 import java.util.Random;
 import java.time.LocalDate;
 
-final class Woman extends Human implements HumanCreator{
+final class Woman extends Human implements HumanCreator, Serializable {
     public Woman(String name,String surname,long birthDate){
         super(name,surname,birthDate);
     }

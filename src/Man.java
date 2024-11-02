@@ -1,9 +1,10 @@
+import java.io.Serializable;
 import java.text.ParseException;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
-final class Man extends Human{
+final class Man extends Human implements Serializable {
     public Man(String name, String surname,long birthDate){
         super(name,surname,birthDate);
     }

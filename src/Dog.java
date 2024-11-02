@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.LinkedHashSet;
 
-class Dog  extends Pet implements Foulable{
+class Dog  extends Pet implements Foulable, Serializable {
     public Dog(){
         super();
         setSpecies(Species.UNKNOWN);

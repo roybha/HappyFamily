@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 
-class RoboCat extends Pet implements Foulable{
+class RoboCat extends Pet implements Foulable, Serializable {
     public RoboCat() {
         super();
         setSpecies(Species.UNKNOWN);

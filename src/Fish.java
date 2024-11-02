@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 
-public class Fish extends Pet{
+public class Fish extends Pet implements Serializable {
     public Fish(){
         super();
         setSpecies(Species.UNKNOWN);

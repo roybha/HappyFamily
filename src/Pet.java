@@ -1,8 +1,9 @@
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 
-abstract class Pet {
+abstract class Pet implements Serializable {
     private Species species;
     private String nickname;
     private int age;

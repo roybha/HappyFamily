@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -7,7 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class Family {
+public class Family implements Serializable {
 private Woman mother;
 private Man father;
 private ArrayList<Human> children;

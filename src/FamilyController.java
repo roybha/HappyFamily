@@ -2,7 +2,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,7 +18,7 @@ public class FamilyController {
             choice.ifPresentOrElse(opt -> {
                 switch (opt.toLowerCase()) {
                     case "1":
-                        fillTestData();
+                        loadEarlierData();
                         break;
                     case "2":
                         displayFamilies();
@@ -51,6 +50,12 @@ public class FamilyController {
                     case "11":
                         addSomePet();
                         break;
+                    case "12":
+                        saveData();
+                        break;
+                    case "13":
+                        loadData();
+                        break;
                     case "exit":
                         System.exit(0);
                         break;
@@ -64,7 +69,7 @@ public class FamilyController {
 
     private void printMenu() {
         System.out.println("Доступні команди:");
-        System.out.println("1 -> Заповнити тестовими даними");
+        System.out.println("1 -> Завантажити дані,збережені раніше");
         System.out.println("2 -> Відобразити весь список сімей");
         System.out.println("3 -> Відобразити список сімей, де кількість людей більша за задану");
         System.out.println("4 -> Відобразити список сімей, де кількість людей менша за задану");
@@ -74,27 +79,16 @@ public class FamilyController {
         System.out.println("8 -> Редагувати сім'ю за індексом сім'ї у загальному списку");
         System.out.println("9 -> Видалити всіх дітей старше віку");
         System.out.println("10 -> Відобразити всіх домашніх улюбленців певної сім'ї");
-        System.out.println("11 -> Відобразити певного домашнього улюбленця певної сім'ї");
+        System.out.println("11 -> Додати домашнього улюбленця до певної сім'ї");
+        System.out.println("12 -> Зберегти(записати) поточний список сімей у файл");
+        System.out.println("13 -> Завантажити(прочитати) список сімей з файлу");
         System.out.println("exit -> Вихід");
     }
-    private void fillTestData() {
+    private void loadEarlierData() {
 
         if(FamiliesService.getAllFamilies().isEmpty()) {
-            familyService.bornChild(createSingleFamily("Анні", "Іванова", LocalDate.of(1989, Month.MARCH, 1),
-                    "Іван", "Іванов", LocalDate.of(1989, Month.APRIL, 1)));
-            familyService.bornChild(createSingleFamily("Марія", "Петриченко", LocalDate.of(1985, Month.JANUARY, 15),
-                    "Олег", "Петриченко", LocalDate.of(1985, Month.FEBRUARY, 20)));
-            familyService. bornChild(createSingleFamily("Ірина", "Соколенко", LocalDate.of(1990, Month.MAY, 10),
-                    "Василь", "Соколенко", LocalDate.of(1988, Month.JUNE, 30)));
-            familyService.bornChild(createSingleFamily("Олена", "Коваль", LocalDate.of(1992, Month.AUGUST, 5),
-                    "Сергій", "Коваль", LocalDate.of(1987, Month.SEPTEMBER, 25)));
-            familyService.bornChild(createSingleFamily("Наталія", "Таран", LocalDate.of(1995, Month.NOVEMBER, 1),
-                    "Андрій", "Таран", LocalDate.of(1990, Month.OCTOBER, 12)));
-            familyService.bornChild(createSingleFamily("Тетяна", "Шевченко", LocalDate.of(1988, Month.DECEMBER, 20),
-                    "Павло", "Шевченко", LocalDate.of(1986, Month.JULY, 15)));
-            familyService.bornChild(createSingleFamily("Катерина", "Гриценко", LocalDate.of(1993, Month.APRIL, 10),
-                    "Микола", "Гриценко", LocalDate.of(1984, Month.AUGUST, 2)));
-            System.out.println("Заповнено тестовими даними");
+            familyService.loadData("families.dat");
+            System.out.println("Заповнено раніше збереженими даними");
         }
         else{
             System.out.println("Сім'ї вже наявні в контролері");
@@ -175,10 +169,11 @@ public class FamilyController {
         Optional<Integer> index = getInt("Введіть індекс родини, яку треба видалити ");
         index.ifPresentOrElse(value -> {
             if (value >= 0 && value < familyService.count()) {
-                familyService.deleteFamilyByIndex(value);
+                familyService.deleteFamilyByIndex(familyService.getAllFamilies().indexOf(familyService.getAllFamilies().get(value)));
                 System.out.println("Сім'я з індексом " + value + " була видалена.");
             } else {
                 System.out.println("Індекс виходить за межі списку сімей.");
+                familyService.collectionFamilyDAO.logger.error("Сім'я за індексом "+value+" відсутня в списку сімей.Видалення не відбулося");
             }
         }, () -> System.out.println("Введено некоректний індекс"));
     }
@@ -189,9 +184,13 @@ public class FamilyController {
                 Family familyToEdit = familyService.getFamilyById(value);
                 try {
                     if(familyToEdit.CountFamily()>=10)
-                        throw new FamilyOverflowException("Неомжливо додати нову дитину -> Переповнення сім'ї");
+                    {
+                        familyService.collectionFamilyDAO.logger.error("Неможливо додати нову дитину -> Переповнення сім'ї");
+                        throw new FamilyOverflowException("Неможливо додати нову дитину -> Переповнення сім'ї");
+                    }
                 }catch (FamilyOverflowException exception) {
                     System.out.println(exception.getMessage());
+                    familyService.collectionFamilyDAO.logger.error(exception.getMessage());
                     return;
                 }
                 Optional<Character> option =getChar("1-Народити дитину/2-Всиновити дитину ");
@@ -216,6 +215,7 @@ public class FamilyController {
                 },()-> System.out.println("Не введено опцію"));
             } else {
                 System.out.println("Індекс виходить за межі списку сімей.");
+                familyService.collectionFamilyDAO.logger.error("Індекс "+ value+" виходить за межі списку сімей.Оновлення не можливе");
             }
         }, () -> System.out.println("Не введено індекс"));
     }
@@ -236,6 +236,7 @@ public class FamilyController {
                 childrenToRemove.forEach(family::DeleteChild);
             });
             System.out.println("Діти старші за " + value + " років видалено з родин");
+            familyService.collectionFamilyDAO.logger.error("Діти старші за " + value + " років видалено з родин");
         }, () -> System.out.println("Не введено коректний вік"));
     }
 
@@ -252,11 +253,13 @@ public class FamilyController {
                 if (input >= 0) {
                     return Optional.of(input);
                 } else {
+                    familyService.collectionFamilyDAO.logger.error("Число повинно бути більшим або дорівнювати 0.");
                     System.out.println("Число повинно бути більшим або дорівнювати 0.");
                 }
             } else {
 
                 System.out.println("Будь ласка, введіть коректне ціле число.");
+                familyService.collectionFamilyDAO.logger.error("Введено число не типу int");
                 scanner.next();
             }
         }
@@ -288,6 +291,7 @@ public class FamilyController {
                 return dateInput;
             } else {
                 System.out.println("Невірний формат дати. Спробуйте ще раз (dd/MM/yyyy).");
+                familyService.collectionFamilyDAO.logger.error("Невірний формат дати.");
             }
         }
     }
@@ -339,9 +343,8 @@ public class FamilyController {
             if (famIndex >= 0 && famIndex < familyService.count()) {
                 // Запит на введення деталей домашнього улюбленця
                 Optional<String> petNameOpt = getString("Введіть ім'я домашнього улюбленця");
-                Optional<String> petTypeOpt = getString("Введіть тип домашнього улюбленця (наприклад, кіт, собака тощо)");
 
-                if (petNameOpt.isPresent() && petTypeOpt.isPresent()) {
+                if (petNameOpt.isPresent()) {
                     // Створення нового улюбленця
                     Pet newPet = new Dog(true, petNameOpt.get()); // Припустимо, у вас є конструктор у класі Pet
 
@@ -349,11 +352,22 @@ public class FamilyController {
                     familyService.addPet(famIndex, newPet);
                     System.out.println("Домашній улюбленець додано успішно.");
                 } else {
-                    System.out.println("Не було введено ім'я або тип домашнього улюбленця.");
+                    System.out.println("Не було введено ім'я улюбленця.");
+                    familyService.collectionFamilyDAO.logger.error("Не було введено ім'я улюбленця.");
                 }
             } else {
                 System.out.println("Індекс виходить за межі списку сімей.");
+                familyService.collectionFamilyDAO.logger.error("Індекс виходить за межі списку сімей.");
             }
         }, () -> System.out.println("Не введено індекс сім'ї."));
+    }
+    private void saveData() {
+        String filePath = getString("Введіть шлях до файлу для збереження даних: ").orElse("families.dat");
+        familyService.saveData(filePath);
+    }
+
+    private void loadData() {
+        String filePath = getString("Введіть шлях до файлу для завантаження даних: ").orElse("families.dat");
+        familyService.loadData(filePath);
     }
 }
