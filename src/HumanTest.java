@@ -14,7 +14,7 @@ class HumanTest {
                 .atStartOfDay(ZoneId.systemDefault())
                 .toInstant()
                 .toEpochMilli());
-        String expected = "class Human{name= John,surname= Doe,birthDate= 01/03/1989,iq= 0,schedule =[[Понеділок, null], [Вівторок, null], [Середа, null], [Четвер, null], [П'ятниця, null], [Субота, null], [Неділя, null]]}";
+        String expected = "Human{name= John,surname= Doe,birthDate= 01/03/1989,iq= 0,schedule =[[Понеділок, null], [Вівторок, null], [Середа, null], [Четвер, null], [П'ятниця, null], [Субота, null], [Неділя, null]]}";
         assertEquals(expected, human.toString());
 
         Human anotherHuman = new Human("Jane", "Smith", 	LocalDate.of(1989, Month.MARCH, 1)
