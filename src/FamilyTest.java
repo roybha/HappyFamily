@@ -18,7 +18,7 @@ class FamilyTest {
                 .toInstant()
                 .toEpochMilli());
         Family family = new Family((Woman) mother, (Man) father);
-        family.AddChild(new Human("Alex","Ivanov",LocalDate.of(2018, Month.AUGUST, 23)
+        family.AddChild(new Man("Alex","Ivanov",LocalDate.of(2018, Month.AUGUST, 23)
                 .atStartOfDay(ZoneId.systemDefault())
                 .toInstant()
                 .toEpochMilli()));
@@ -52,13 +52,14 @@ class FamilyTest {
                 .atStartOfDay(ZoneId.systemDefault())
                 .toInstant()
                 .toEpochMilli()));
+        FamiliesService.collectionFamilyDAO=new CollectionFamilyDAO(new ArrayList<>(Arrays.asList(family, family2, family3, family4, family5)));
         return new ArrayList<>(Arrays.asList(family, family2, family3, family4, family5));
     }
     @Test
     void testToString() {
 
         Family family = CreateFamilies();
-        String expected = "class Family{ mother=Human{name= Anna,surname= Ivanova,birthDate= 01/03/1989,iq= 0,schedule =[[Понеділок, null], [Вівторок, null], [Середа, null], [Четвер, null], [П'ятниця, null], [Субота, null], [Неділя, null]]},father=Human{name= Ivan,surname= Ivanov,birthDate= 01/04/1989,iq= 0,schedule =[[Понеділок, null], [Вівторок, null], [Середа, null], [Четвер, null], [П'ятниця, null], [Субота, null], [Неділя, null]]}, children=Human{name= Alex,surname= Ivanov,birthDate= 23/08/2018,iq= 0,schedule =[[Понеділок, null], [Вівторок, null], [Середа, null], [Четвер, null], [П'ятниця, null], [Субота, null], [Неділя, null]]}, pets=[DOG{ nickname= Rex, age= 0, tricklevel= 0, habits= none, canFly= false, numberOfLegs= 4, hasFur= true }, UNKNOWN{ nickname= Luna, age= 0, tricklevel= 0, habits= none, canFly= false, numberOfLegs= 0, hasFur= false }, DOG{ nickname= T-Rex, age= 0, tricklevel= 0, habits= none, canFly= false, numberOfLegs= 4, hasFur= true }]}";
+        String expected = "class Family{ mother=Woman{name= Anna,surname= Ivanova,birthDate= 01/03/1989,iq= 0,schedule =[[Понеділок, null], [Вівторок, null], [Середа, null], [Четвер, null], [П'ятниця, null], [Субота, null], [Неділя, null]]},father=Man{name= Ivan,surname= Ivanov,birthDate= 01/04/1989,iq= 0,schedule =[[Понеділок, null], [Вівторок, null], [Середа, null], [Четвер, null], [П'ятниця, null], [Субота, null], [Неділя, null]]}, children=Man{name= Alex,surname= Ivanov,birthDate= 23/08/2018,iq= 0,schedule =[[Понеділок, null], [Вівторок, null], [Середа, null], [Четвер, null], [П'ятниця, null], [Субота, null], [Неділя, null]]}, pets=[DOG{ nickname= Rex, age= 0, tricklevel= 0, habits= none, canFly= false, numberOfLegs= 4, hasFur= true }, UNKNOWN{ nickname= Luna, age= 0, tricklevel= 0, habits= none, canFly= false, numberOfLegs= 0, hasFur= false }, DOG{ nickname= T-Rex, age= 0, tricklevel= 0, habits= none, canFly= false, numberOfLegs= 4, hasFur= true }]}";
         assertEquals(expected, family.toString());
         Human anotherHuman = new Man("Jack", "Smith", LocalDate.of(1999, Month.JUNE, 1)
                 .atStartOfDay(ZoneId.systemDefault())
@@ -215,27 +216,27 @@ class FamilyTest {
     @Test
     public void FamilyServiceTest(){
 
-        List<Family>familyList=CreateFamilyList();
+        CreateFamilyList();
         System.out.printf("Родини,кількість яких більша %d%n",3);
-        List<Family> biggerFamilies = FamiliesService.getFamiliesBiggerOrLessThan(familyList,3,true);
+        List<Family> biggerFamilies = FamiliesService.getFamiliesBiggerOrLessThan(3,true);
         assertEquals(4,biggerFamilies.size());
         FamiliesService.displayAllFamilies(biggerFamilies);
         System.out.printf("Родини,кількість яких менше %d%n",4);
-        List<Family> lessFamilies = FamiliesService.getFamiliesBiggerOrLessThan(familyList,4,false);
+        List<Family> lessFamilies = FamiliesService.getFamiliesBiggerOrLessThan(4,false);
         FamiliesService.displayAllFamilies(lessFamilies);
         assertEquals(1,lessFamilies.size());
-        int familiesEqualsMembersFive = FamiliesService.countFamiliesWithMemberNumber(familyList,5);
+        int familiesEqualsMembersFive = FamiliesService.countFamiliesWithMemberNumber(5);
         System.out.printf("Кількість родин,кількість членів яких дорівнює %d = %n",5,familiesEqualsMembersFive);
         assertEquals(1,familiesEqualsMembersFive);
         System.out.println("Загальна кількість членів родини ДО видалення дітей старше 5");
-        familyList.stream().forEach(family1 -> System.out.printf("Кількість членів родини - %d%n",family1.CountFamily()));
-        FamiliesService.deleteAllChildrenOlderThan(familyList,5);
+        FamiliesService.collectionFamilyDAO.getAllFamilies().forEach(family1 -> System.out.printf("Кількість членів родини - %d%n",family1.CountFamily()));
+        FamiliesService.deleteAllChildrenOlderThan(5);
         System.out.println("Загальна кількість членів родини ПІСЛЯ видалення дітей старше 5");
-        familyList.stream().forEach(family1 -> System.out.printf("Кількість членів родини - %d%n",family1.CountFamily()));
-        assertEquals(2,familyList.get(0).CountFamily());
-        assertEquals(2,familyList.get(1).CountFamily());
-        assertEquals(2,familyList.get(2).CountFamily());
-        assertEquals(3,familyList.get(3).CountFamily());
-        assertEquals(3,familyList.get(4).CountFamily());
+        FamiliesService.collectionFamilyDAO.getAllFamilies().stream().forEach(family1 -> System.out.printf("Кількість членів родини - %d%n",family1.CountFamily()));
+        assertEquals(2,FamiliesService.collectionFamilyDAO.getAllFamilies().get(0).CountFamily());
+        assertEquals(2,FamiliesService.collectionFamilyDAO.getAllFamilies().get(1).CountFamily());
+        assertEquals(2,FamiliesService.collectionFamilyDAO.getAllFamilies().get(2).CountFamily());
+        assertEquals(3,FamiliesService.collectionFamilyDAO.getAllFamilies().get(3).CountFamily());
+        assertEquals(3,FamiliesService.collectionFamilyDAO.getAllFamilies().get(4).CountFamily());
     }
 }

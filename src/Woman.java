@@ -69,9 +69,9 @@ final class Woman extends Human implements HumanCreator{
         boolean childSex=rand.nextBoolean();
         long birthDateInMillis = Instant.now().toEpochMilli();
         Human child=(childSex) ? new Woman(womanNames[rand.nextInt(womanNames.length)],
-                this.getFamily().getFather().getSurname(),birthDateInMillis,this,(Man)this.getFamily().getFather()) :
+                this.getFamily().getMother().getSurname(),birthDateInMillis,this,this.getFamily().getFather()) :
                 new Man(manNames[rand.nextInt(manNames.length)],
-                this.getFamily().getFather().getSurname(),birthDateInMillis,this,(Man)this.getFamily().getFather());
+                this.getFamily().getFather().getSurname(),birthDateInMillis,this,this.getFamily().getFather());
         child.setIq((this.getIq()+this.getFamily().getFather().getIq())/2);
         return child;
     }
